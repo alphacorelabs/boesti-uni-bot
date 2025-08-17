@@ -2,41 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* BOESTI Admission Chatbot Design System
+University-grade professional design with academic excellence in mind.
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
+    /* Core Academic Color Palette */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* University Deep Blue - Primary Brand */
+    --primary: 224 86% 37%; /* Deep academic blue #1e40af */
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 219 85% 56%; /* Light blue #3b82f6 */
+    --primary-muted: 219 85% 95%; /* Very light blue tint */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
+    /* Academic Secondary Colors */
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
+    /* University Success & Error */
+    --success: 142 76% 36%; /* Academic green #10b981 */
+    --success-foreground: 0 0% 100%;
+    --error: 0 84% 60%; /* Academic red #ef4444 */
+    --error-foreground: 0 0% 100%;
+
+    /* Chat Interface Colors */
+    --chat-user: 219 85% 56%; /* User message blue */
+    --chat-user-foreground: 0 0% 100%;
+    --chat-bot: 210 17% 95%; /* Bot message gray */
+    --chat-bot-foreground: 222.2 84% 4.9%;
+    --chat-input: 0 0% 100%;
+    --chat-input-border: 220 13% 91%;
+
+    /* Professional Grays */
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
+    /* System Colors */
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 219 85% 56%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* University Gradients */
+    --gradient-academic: linear-gradient(135deg, hsl(224 86% 37%), hsl(219 85% 56%));
+    --gradient-subtle: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 40% 98%));
+    --gradient-chat: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 99%));
 
-    --radius: 0.5rem;
+    /* Academic Shadows */
+    --shadow-academic: 0 10px 25px -5px hsla(224, 86%, 37%, 0.1);
+    --shadow-chat: 0 4px 12px -2px hsla(224, 86%, 37%, 0.08);
+    --shadow-card: 0 2px 8px -1px hsla(224, 86%, 37%, 0.06);
+
+    /* Typography & Spacing */
+    --radius: 0.75rem;
+    --font-academic: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 
     --sidebar-background: 0 0% 98%;
 
@@ -94,6 +124,8 @@ All colors MUST be HSL.
   }
 }
 
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -101,5 +133,64 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-academic);
+  }
+}
+
+@layer components {
+  /* Academic Button Variants */
+  .btn-academic {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-card hover:shadow-academic;
+  }
+
+  .btn-academic-outline {
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-6 py-3 rounded-lg font-medium transition-all duration-200;
+  }
+
+  /* Chat Message Variants */
+  .chat-message-user {
+    @apply bg-chat-user text-chat-user-foreground ml-auto max-w-xs lg:max-w-md px-4 py-3 rounded-2xl rounded-br-md shadow-chat;
+  }
+
+  .chat-message-bot {
+    @apply bg-chat-bot text-chat-bot-foreground mr-auto max-w-xs lg:max-w-md px-4 py-3 rounded-2xl rounded-bl-md shadow-chat;
+  }
+
+  /* Academic Card Styles */
+  .card-academic {
+    @apply bg-card border border-border rounded-xl shadow-card hover:shadow-academic transition-all duration-200;
+  }
+
+  /* University Header Styles */
+  .header-academic {
+    @apply bg-gradient-to-r from-primary to-primary-light text-primary-foreground;
+  }
+
+  /* Typing Animation */
+  .typing-dots {
+    @apply flex space-x-1;
+  }
+
+  .typing-dot {
+    @apply w-2 h-2 bg-muted-foreground rounded-full animate-pulse;
+    animation-delay: var(--delay);
+  }
+
+  /* Chat Input Focus */
+  .chat-input {
+    @apply border-chat-input-border focus:border-primary focus:ring-2 focus:ring-primary/20 bg-chat-input;
+  }
+
+  /* Professional Animations */
+  .fade-in {
+    @apply animate-in fade-in-0 duration-300;
+  }
+
+  .slide-up {
+    @apply animate-in slide-in-from-bottom-2 duration-300;
+  }
+
+  .scale-in {
+    @apply animate-in zoom-in-95 duration-200;
   }
 }
