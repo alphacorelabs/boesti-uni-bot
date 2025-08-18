@@ -1,10 +1,10 @@
 # BOUESTI Admission Inquiry Chatbot
 
-An AI-powered chatbot designed to provide instant answers about admissions, programs, requirements, and deadlines for Bamidele Olomilua University of Science & Technology (BOUESTI).
+An AI-powered chatbot designed to provide instant answers about admissions, programs, requirements, and deadlines for Bamidele Olumilua University of Science & Technology (BOUESTI).
 
 **Developer**: Egbeyemi Adeniyi Olorunfemi  
 **Department**: Computer Science  
-**University**: Bamidele Olomilua University of Science & Technology  
+**University**: Bamidele Olumilua University of Science & Technology  
 **Project Type**: Final Year Project
 
 ## Features
@@ -132,8 +132,8 @@ This project is part of a final year Computer Science project at BOUESTI. For co
 
 ## License
 
-This project is developed as an academic project for Bamidele Olomilua University of Science & Technology.
+This project is developed as an academic project for Bamidele Olumilua University of Science & Technology.
 
 ---
 
-**About BOUESTI**: Bamidele Olomilua University of Science & Technology is a leading institution committed to excellence in science, technology, and innovation education in Nigeria.
+**About BOUESTI**: Bamidele Olumilua University of Science & Technology is a leading institution committed to excellence in science, technology, and innovation education in Nigeria.
