@@ -9,7 +9,7 @@ export const useChatbot = () => {
     {
       id: "welcome",
       type: "bot",
-      content: `Hello! I'm your official BOUESTI admission assistant. I can help you with:
+      content: `Hello! I'm your  BOUESTI admission assistant. I can help you with:
 
 🎓 **Admission Requirements** - Entry requirements and eligibility
 📋 **Application Process** - Step-by-step guidance

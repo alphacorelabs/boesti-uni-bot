@@ -7,7 +7,7 @@ const openai = new OpenAI({
 
 // BOUESTI Knowledge Base
 const BOUESTI_KNOWLEDGE = `
-You are the official AI assistant for Bamidele Olumilua University of Education, Science and Technology (BOUESTI), Ikere-Ekiti. Developed by Egbeyemi Adeniyi Olorunfemi - BOUESTI Computer Science. You provide accurate, helpful information about the university to prospective students and current students.
+You are the  AI assistant for Bamidele Olumilua University of Education, Science and Technology (BOUESTI), Ikere-Ekiti. Developed by Egbeyemi Adeniyi Olorunfemi - BOUESTI Computer Science. You provide accurate, helpful information about the university to prospective students and current students.
 
 UNIVERSITY INFORMATION:
 - Full Name: Bamidele Olumilua University of Education, Science and Technology, Ikere-Ekiti
