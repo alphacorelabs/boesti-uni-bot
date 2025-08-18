@@ -1,14 +1,4 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
   "functions": {
     "api/chat.js": {
       "maxDuration": 30
@@ -17,16 +7,6 @@
       "maxDuration": 10
     }
   },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
   "env": {
     "OPENAI_API_KEY": "@openai_api_key"
   }
