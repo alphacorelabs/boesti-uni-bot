@@ -1,4 +1,4 @@
-const OpenAI = require("openai");
+import OpenAI from "openai";
 
 // Initialize OpenAI
 const openai = new OpenAI({
@@ -236,19 +236,18 @@ IMPORTANT NOTES:
 Always provide accurate, helpful responses based on this information. Be friendly, professional, and encouraging about BOUESTI's opportunities.
 `;
 
-module.exports = async function handler(req, res) {
-  // Handle CORS preflight
+export default async function handler(req, res) {
+  // Handle CORS
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
   if (req.method === "OPTIONS") {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     res.status(200).end();
     return;
   }
 
-  // Only allow POST requests
   if (req.method !== "POST") {
-    res.setHeader("Access-Control-Allow-Origin", "*");
     return res.status(405).json({ error: "Method not allowed" });
   }
 
@@ -256,18 +255,10 @@ module.exports = async function handler(req, res) {
     const { message, conversationHistory = [] } = req.body;
 
     if (!message) {
-      res.setHeader("Access-Control-Allow-Origin", "*");
       return res.status(400).json({ error: "Message is required" });
     }
 
-    // Validate OpenAI API key
-    if (!process.env.OPENAI_API_KEY) {
-      console.error("OpenAI API key not found");
-      res.setHeader("Access-Control-Allow-Origin", "*");
-      return res.status(500).json({ error: "OpenAI API key not configured" });
-    }
-
-    // Prepare conversation for OpenAI
+    // Prepare conversation history for OpenAI
     const messages = [
       {
         role: "system",
@@ -280,9 +271,7 @@ module.exports = async function handler(req, res) {
       },
     ];
 
-    console.log("Calling OpenAI API...");
-
-    // Call OpenAI API with streaming
+    // Call OpenAI API
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: messages,
@@ -291,16 +280,17 @@ module.exports = async function handler(req, res) {
       stream: true,
     });
 
-    // Set headers for streaming response
-    res.setHeader("Content-Type", "text/plain; charset=utf-8");
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
+    // Set up streaming response
+    res.writeHead(200, {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Transfer-Encoding": "chunked",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type",
+    });
 
     // Stream the response
     for await (const chunk of completion) {
-      const content = chunk.choices[0]?.delta?.content;
+      const content = chunk.choices[0]?.delta?.content || "";
       if (content) {
         res.write(JSON.stringify({ content }) + "\n");
       }
@@ -308,27 +298,10 @@ module.exports = async function handler(req, res) {
 
     res.end();
   } catch (error) {
-    console.error("Error in chat API:", error);
-    res.setHeader("Access-Control-Allow-Origin", "*");
-
-    // Handle specific OpenAI errors
-    if (error.code === "insufficient_quota") {
-      return res.status(429).json({
-        error: "OpenAI quota exceeded. Please try again later.",
-        details: "API quota limit reached",
-      });
-    }
-
-    if (error.code === "invalid_api_key") {
-      return res.status(401).json({
-        error: "Invalid OpenAI API key",
-        details: "API key authentication failed",
-      });
-    }
-
-    return res.status(500).json({
+    console.error("Error calling OpenAI:", error);
+    res.status(500).json({
       error: "Failed to get response from AI",
-      details: error.message || "Unknown error occurred",
+      details: error.message,
     });
   }
-};
+}
