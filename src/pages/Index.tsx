@@ -263,7 +263,7 @@ const Index: React.FC = () => {
 
         {/* Footer */}
         <div className="text-center mt-6 sm:mt-8 px-4">
-          <p className="text-gray-300 text-xs sm:text-sm">© 2024 Bamidele Olumilua University • Computer Science Department</p>
+          <p className="text-gray-300 text-xs sm:text-sm">© 2025 Bamidele Olumilua University • Computer Science Department</p>
         </div>
       </div>
     </div>
