@@ -1,219 +1,158 @@
-import { useState, useCallback, useRef } from 'react';
-import { Message } from '@/components/ChatWindow';
-import { ConnectionState } from '@/components/ConnectionStatus';
+import { useState, useCallback, useRef } from "react";
+import { Message } from "@/components/ChatWindow";
+import { ConnectionState } from "@/components/ConnectionStatus";
 
-// Simulated responses for demonstration
-const botResponses: Record<string, string> = {
-  admission: `The admission requirements for BOESTI programs include:
-
-📋 **General Requirements:**
-• Senior Secondary Certificate (WAEC/NECO) with minimum 5 credits including English and Mathematics
-• JAMB UTME score (minimum cut-off varies by program)
-• BOESTI Post-UTME screening examination
-• Medical certificate of fitness
-
-🖥️ **Computer Science Specific:**
-• Mathematics (credit level)
-• Physics (credit level)  
-• Chemistry or Biology (credit level)
-• Minimum JAMB score: 180
-
-Would you like more details about any specific requirement?`,
-
-  documents: `Required documents for your application:
-
-📄 **Academic Documents:**
-• Original and photocopies of O'Level certificates (WAEC/NECO)
-• JAMB result slip
-• Birth certificate or age declaration
-• Local Government origin certificate
-
-🏥 **Medical & Personal:**
-• Medical certificate from a recognized hospital
-• Recent passport photographs (8 copies)
-• Completed application form
-
-💰 **Payment:**
-• Application fee receipt
-• Acceptance fee receipt (upon offer)
-
-All documents should be submitted during the application period.`,
-
-  programs: `BOESTI offers excellent programs in technology and science:
-
-🖥️ **Computer Science Department:**
-• Computer Science (B.Sc) - 4 years
-• Software Engineering track available
-• Strong emphasis on practical programming
-• Industry partnerships for internships
-
-🔬 **Other Programs:**
-• Information Technology
-• Electrical/Electronics Engineering  
-• Mechanical Engineering
-• Pure and Applied Sciences
-
-The Computer Science program includes modern curriculum with AI, cybersecurity, and mobile development courses.`,
-
-  deadlines: `Important dates for the 2024/2025 academic session:
-
-📅 **Application Timeline:**
-• Application portal opens: May 15, 2024
-• Application deadline: August 30, 2024
-• Post-UTME screening: September 15-20, 2024
-• Admission list release: October 15, 2024
-
-⏰ **Payment Deadlines:**
-• Application fee: Before August 30, 2024
-• Acceptance fee: Within 2 weeks of admission offer
-• School fees: Before resumption date
-
-📚 **Academic Calendar:**
-• Resumption: November 4, 2024
-• Orientation: November 4-8, 2024
-• Lectures begin: November 11, 2024`,
-
-  scholarship: `BOESTI offers several scholarship opportunities:
-
-🎓 **Merit-Based Scholarships:**
-• Academic Excellence Award (full tuition)
-• Dean's List Scholarship (50% tuition)
-• Minimum CGPA requirement: 3.5
-
-💼 **Need-Based Support:**
-• Financial hardship assistance
-• Work-study programs available
-• Payment plan options
-
-🏆 **Special Programs:**
-• STEM Excellence Scholarship for Computer Science
-• Rural Community Scholarship
-• Alumni Scholarship Fund
-
-Application for scholarships opens alongside admission applications. Contact the Student Affairs Office for more details.`
-};
+const API_BASE_URL = process.env.NODE_ENV === "development" ? "http://localhost:3001/api" : "/api";
 
 export const useChatbot = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: "welcome",
+      type: "bot",
+      content: `Hello! I'm your official BOUESTI admission assistant. I can help you with:
+
+🎓 **Admission Requirements** - Entry requirements and eligibility
+📋 **Application Process** - Step-by-step guidance
+📅 **Important Dates** - Deadlines and academic calendar
+💰 **Fees & Scholarships** - Financial information
+🏫 **Programs** - Available degree courses
+📞 **Contact Information** - University details
+
+What would you like to know about BOUESTI?`,
+      timestamp: new Date(),
+    },
+  ]);
   const [isTyping, setIsTyping] = useState(false);
-  const [connectionStatus, setConnectionStatus] = useState<ConnectionState>('connected');
+  const [connectionStatus, setConnectionStatus] = useState<ConnectionState>("connected");
   const messageIdCounter = useRef(0);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const generateMessageId = () => {
     messageIdCounter.current += 1;
     return `msg_${messageIdCounter.current}_${Date.now()}`;
   };
 
-  const findBestResponse = (userMessage: string): string => {
-    const message = userMessage.toLowerCase();
-    
-    if (message.includes('admission') || message.includes('requirement') || message.includes('qualify')) {
-      return botResponses.admission;
-    }
-    if (message.includes('document') || message.includes('paper') || message.includes('certificate')) {
-      return botResponses.documents;
-    }
-    if (message.includes('program') || message.includes('course') || message.includes('computer science') || message.includes('study')) {
-      return botResponses.programs;
-    }
-    if (message.includes('deadline') || message.includes('when') || message.includes('date') || message.includes('timeline')) {
-      return botResponses.deadlines;
-    }
-    if (message.includes('scholarship') || message.includes('financial') || message.includes('fee') || message.includes('payment')) {
-      return botResponses.scholarship;
-    }
+  const sendMessage = useCallback(
+    async (content: string) => {
+      if (isTyping || !content.trim()) return;
 
-    // Default response for other queries
-    return `Thank you for your question about "${userMessage}".
-
-I'm the BOESTI Admission Assistant, and I can help you with:
-
-🎓 **Admission Requirements** - Entry requirements for all programs
-📋 **Required Documents** - What you need to submit  
-📅 **Important Dates** - Application deadlines and academic calendar
-💰 **Financial Information** - Fees, scholarships, and payment options
-🖥️ **Program Details** - Information about our courses
-
-Please feel free to ask me about any of these topics, and I'll provide you with detailed information to help with your admission process.`;
-  };
-
-  const simulateTyping = async (response: string): Promise<void> => {
-    return new Promise((resolve) => {
-      const words = response.split(' ');
-      let currentText = '';
-      let wordIndex = 0;
-      
-      const botMessage: Message = {
+      // Add user message
+      const userMessage: Message = {
         id: generateMessageId(),
-        type: 'bot',
-        content: '',
+        type: "user",
+        content: content.trim(),
         timestamp: new Date(),
-        isStreaming: true
       };
 
-      // Add empty bot message
-      setMessages(prev => [...prev, botMessage]);
+      setMessages((prev) => [...prev, userMessage]);
+      setIsTyping(true);
+      setConnectionStatus("connected");
 
-      const typeNextWord = () => {
-        if (wordIndex < words.length) {
-          currentText += (wordIndex > 0 ? ' ' : '') + words[wordIndex];
-          
-          setMessages(prev => 
-            prev.map(msg => 
-              msg.id === botMessage.id 
-                ? { ...msg, content: currentText }
-                : msg
-            )
-          );
-          
-          wordIndex++;
-          // Vary typing speed for more natural feel
-          const delay = Math.random() * 50 + 30; // 30-80ms per word
-          setTimeout(typeNextWord, delay);
-        } else {
-          // Mark as complete
-          setMessages(prev => 
-            prev.map(msg => 
-              msg.id === botMessage.id 
-                ? { ...msg, isStreaming: false }
-                : msg
-            )
-          );
-          setIsTyping(false);
-          resolve();
+      // Cancel any previous request
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      // Create new abort controller for this request
+      abortControllerRef.current = new AbortController();
+
+      try {
+        // Prepare conversation history (last 10 messages for context)
+        const conversationHistory = messages.slice(-10).map((msg) => ({
+          role: msg.type === "user" ? "user" : "assistant",
+          content: msg.content,
+        }));
+
+        const response = await fetch(`${API_BASE_URL}/chat`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: content,
+            conversationHistory,
+          }),
+          signal: abortControllerRef.current.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-      };
 
-      setTimeout(typeNextWord, 500); // Initial delay before typing starts
-    });
-  };
+        // Create bot message for streaming
+        const botMessage: Message = {
+          id: generateMessageId(),
+          type: "bot",
+          content: "",
+          timestamp: new Date(),
+          isStreaming: true,
+        };
 
-  const sendMessage = useCallback(async (content: string) => {
-    if (isTyping) return;
+        setMessages((prev) => [...prev, botMessage]);
 
-    // Add user message
-    const userMessage: Message = {
-      id: generateMessageId(),
-      type: 'user',
-      content,
-      timestamp: new Date()
-    };
+        // Handle streaming response
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
 
-    setMessages(prev => [...prev, userMessage]);
-    setIsTyping(true);
+        if (reader) {
+          let accumulatedContent = "";
 
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
+          while (true) {
+            const { done, value } = await reader.read();
 
-    // Get and stream bot response
-    const response = findBestResponse(content);
-    await simulateTyping(response);
-  }, [isTyping]);
+            if (done) break;
+
+            const chunk = decoder.decode(value, { stream: true });
+            const lines = chunk.split("\n").filter((line) => line.trim());
+
+            for (const line of lines) {
+              try {
+                const parsed = JSON.parse(line);
+                if (parsed.content) {
+                  accumulatedContent += parsed.content;
+
+                  // Update bot message with new content
+                  setMessages((prev) => prev.map((msg) => (msg.id === botMessage.id ? { ...msg, content: accumulatedContent } : msg)));
+                }
+              } catch (e) {
+                // Ignore parsing errors for incomplete chunks
+              }
+            }
+          }
+
+          // Mark streaming as complete
+          setMessages((prev) => prev.map((msg) => (msg.id === botMessage.id ? { ...msg, isStreaming: false } : msg)));
+        }
+      } catch (error: unknown) {
+        console.error("Error sending message:", error);
+
+        if (error instanceof Error && error.name === "AbortError") {
+          return; // Request was cancelled
+        }
+
+        setConnectionStatus("disconnected");
+
+        // Add error message
+        const errorMessage: Message = {
+          id: generateMessageId(),
+          type: "bot",
+          content: `I apologize, but I'm having trouble connecting to the server right now. Please check your internet connection and try again. If the problem persists, you can contact BOUESTI directly at portal.bouesti.edu.ng.`,
+          timestamp: new Date(),
+        };
+
+        setMessages((prev) => [...prev, errorMessage]);
+      } finally {
+        setIsTyping(false);
+        abortControllerRef.current = null;
+      }
+    },
+    [isTyping, messages]
+  );
 
   return {
     messages,
     isTyping,
     connectionStatus,
-    sendMessage
+    sendMessage,
   };
 };

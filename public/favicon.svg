@@ -1,0 +1,18 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#10b981"/>
+  
+  <!-- Graduation cap -->
+  <g transform="translate(6, 8)">
+    <!-- Cap top -->
+    <path d="M2 8L10 6L18 8L10 10L2 8Z" fill="white"/>
+    <!-- Cap bottom -->
+    <path d="M4 9V12C4 13.1 6.9 14 10 14C13.1 14 16 13.1 16 12V9" stroke="white" stroke-width="1.5" fill="none"/>
+    <!-- Tassel -->
+    <circle cx="16" cy="6" r="1" fill="white"/>
+    <line x1="16" y1="7" x2="17" y2="9" stroke="white" stroke-width="1"/>
+  </g>
+  
+  <!-- University initial "B" -->
+  <text x="16" y="24" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">B</text>
+</svg> 

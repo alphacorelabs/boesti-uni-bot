@@ -1,73 +1,139 @@
-# Welcome to your Lovable project
+# BOUESTI Admission Inquiry Chatbot
 
-## Project info
+An AI-powered chatbot designed to provide instant answers about admissions, programs, requirements, and deadlines for Bamidele Olomilua University of Science & Technology (BOUESTI).
 
-**URL**: https://lovable.dev/projects/c7eecd21-ef8f-49a1-962b-0cb052efe694
+**Developer**: Egbeyemi Adeniyi Olorunfemi  
+**Department**: Computer Science  
+**University**: Bamidele Olomilua University of Science & Technology  
+**Project Type**: Final Year Project
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **Modern Glassmorphism UI**: Beautiful, responsive design with glass-like effects
+- **Real-time Chat Interface**: Interactive conversation with streaming responses
+- **Mobile Responsive**: Optimized for all device sizes
+- **Quick Questions**: Pre-defined common questions for easy access
+- **University Branding**: Custom BOUESTI colors and branding throughout
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c7eecd21-ef8f-49a1-962b-0cb052efe694) and start prompting.
+- **Frontend**: React 18 with TypeScript
+- **Backend**: Express.js with OpenAI GPT-3.5-turbo
+- **Styling**: Tailwind CSS with custom design system
+- **Build Tool**: Vite
+- **Icons**: Lucide React
+- **UI Components**: Custom glassmorphism components
+- **AI Integration**: OpenAI API with streaming responses
 
-Changes made via Lovable will be committed automatically to this repo.
+## Getting Started
 
-**Use your preferred IDE**
+### Prerequisites
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Node.js 18 or higher
+- npm or yarn
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
 
-Follow these steps:
+1. Clone the repository:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+```bash
+git clone <repository-url>
+cd boesti-uni-bot
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Install dependencies:
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+npm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. Set up the backend environment:
+
+```bash
+cd backend
+cp .env.example .env
+# Edit .env and add your OpenAI API key
+```
+
+4. Start both frontend and backend:
+
+```bash
+cd ..
+npm run dev:full
+```
+
+5. Open your browser and navigate to `http://localhost:5173`
+
+### Running Frontend and Backend Separately
+
+**Frontend only:**
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+**Backend only:**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+cd backend
+npm run dev
+```
 
-**Use GitHub Codespaces**
+### Building for Production
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+npm run build
+```
 
-## What technologies are used for this project?
+The built files will be in the `dist` directory.
 
-This project is built with:
+## Project Structure
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```
+src/
+├── components/          # Reusable UI components
+├── hooks/              # Custom React hooks
+├── pages/              # Page components
+├── assets/             # Static assets (images, etc.)
+└── lib/                # Utility functions
+```
 
-## How can I deploy this project?
+## Features Overview
 
-Simply open [Lovable](https://lovable.dev/projects/c7eecd21-ef8f-49a1-962b-0cb052efe694) and click on Share -> Publish.
+### Chat Functionality
 
-## Can I connect a custom domain to my Lovable project?
+- Interactive chat interface with bot responses
+- Typing indicators and streaming text effects
+- Message history with timestamps
+- Quick question buttons for common inquiries
 
-Yes, you can!
+### Topics Covered
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- **Admission Requirements**: Entry requirements for all programs
+- **Required Documents**: What students need to submit
+- **Important Dates**: Application deadlines and academic calendar
+- **Financial Information**: Fees, scholarships, and payment options
+- **Program Details**: Information about courses, especially Computer Science
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Responsive Design
+
+- Mobile-first approach
+- Adaptive layouts for tablets and desktops
+- Touch-friendly interactions
+- Optimized performance across devices
+
+## Customization
+
+The chatbot responses can be customized by editing the `useChatbot.ts` hook in the `src/hooks/` directory. The design system uses CSS custom properties for easy theming.
+
+## Contributing
+
+This project is part of a final year Computer Science project at BOUESTI. For contributions or questions, please contact the developer.
+
+## License
+
+This project is developed as an academic project for Bamidele Olomilua University of Science & Technology.
+
+---
+
+**About BOUESTI**: Bamidele Olomilua University of Science & Technology is a leading institution committed to excellence in science, technology, and innovation education in Nigeria.

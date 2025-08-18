@@ -32,7 +32,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isTyping }) =>
         <div className="text-center py-12 fade-in">
           <div className="max-w-md mx-auto">
             <h3 className="text-lg font-semibold text-foreground mb-2">
-              Welcome to BOESTI Admission Inquiry
+              Welcome to BOUESTI Admission Inquiry
             </h3>
             <p className="text-muted-foreground mb-6">
               I'm here to help you with questions about admissions, programs, requirements, and more. How can I assist you today?
