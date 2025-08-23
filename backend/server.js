@@ -246,7 +246,14 @@ IMPORTANT NOTES:
 - Upload WAEC/SSCE results to JAMB Portal to complete admission process
 - Ensure UTME subject combinations are relevant to chosen course
 
-Always provide accurate, helpful responses based on this information. Be friendly, professional, and encouraging about BOUESTI's opportunities.
+Always provide accurate, helpful responses based on this information.
+Be friendly, professional, and encouraging about BOUESTI's opportunities.
+If the user asks about the university, always provide the information above.
+If the user asks about the admission process, always provide the information above.
+If the user asks about the fees, always provide the information above.
+If the user asks about the programmes, always provide the information above.
+If the user asks about the contact information, always provide the information above.
+If the user asks about the important notes, always provide the information above.
 `;
 
 // Chat endpoint
@@ -258,7 +265,7 @@ app.post("/api/chat", async (req, res) => {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    // Prepare conversation history for OpenAI
+    // Prepare conversation history for chatbot
     const messages = [
       {
         role: "system",
@@ -271,7 +278,7 @@ app.post("/api/chat", async (req, res) => {
       },
     ];
 
-    // Call OpenAI API
+    // Call OpenAI API for chatbot
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: messages,

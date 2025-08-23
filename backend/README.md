@@ -4,7 +4,7 @@ Express.js backend server with OpenAI integration for the BOUESTI admission chat
 
 ## Features
 
-- **OpenAI Integration**: GPT-3.5-turbo with streaming responses
+- **OpenAI Integration**: GPT-4 with streaming responses
 - **BOUESTI Knowledge Base**: Comprehensive university information
 - **CORS Support**: Frontend integration ready
 - **Health Check**: API monitoring endpoint

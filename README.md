@@ -18,7 +18,7 @@ An AI-powered chatbot designed to provide instant answers about admissions, prog
 ## Tech Stack
 
 - **Frontend**: React 18 with TypeScript
-- **Backend**: Express.js with OpenAI GPT-3.5-turbo
+- **Backend**: Express.js with OpenAI GPT-4
 - **Styling**: Tailwind CSS with custom design system
 - **Build Tool**: Vite
 - **Icons**: Lucide React
