@@ -24,7 +24,7 @@ In your Vercel project settings, add the following environment variable:
 **Environment Variable:**
 
 - **Name**: `OPENAI_API_KEY`
-- **Value**: `sk-proj-TDXvlBCV7VvNnv6k7rlDT3BlbkFJ6xohmSDoWkhHQht5sIU9`
+- **Value**: ``
 
 **Steps:**
 
