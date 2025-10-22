@@ -1,13 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Bot, User, Wifi, WifiOff, MessageCircle, GraduationCap, BookOpen, Users, Award } from "lucide-react";
+import { Send, Bot, User, Wifi, WifiOff, MessageCircle, GraduationCap, BookOpen, Users, Award, ThumbsUp, ThumbsDown } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useChatbot } from "@/hooks/useChatbot";
+import { useToast } from "@/hooks/use-toast";
 
 const Index: React.FC = () => {
   const { messages, isTyping, connectionStatus, sendMessage } = useChatbot();
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+  const [messageFeedback, setMessageFeedback] = useState<Record<string, "positive" | "negative" | null>>({});
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -25,6 +28,49 @@ const Index: React.FC = () => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleFeedback = (messageId: string, feedbackType: "positive" | "negative") => {
+    // Toggle feedback: if clicking the same type, remove it; otherwise set new type
+    const currentFeedback = messageFeedback[messageId];
+    const newFeedback = currentFeedback === feedbackType ? null : feedbackType;
+
+    setMessageFeedback((prev) => ({
+      ...prev,
+      [messageId]: newFeedback,
+    }));
+
+    // Show toast notification
+    if (newFeedback === "positive") {
+      toast({
+        title: "Thank you for your feedback! 👍",
+        description: "Your positive feedback helps us improve the chatbot.",
+        duration: 3000,
+      });
+    } else if (newFeedback === "negative") {
+      toast({
+        title: "Thank you for your feedback 👎",
+        description: "We'll work on improving our responses.",
+        duration: 3000,
+      });
+    } else {
+      toast({
+        title: "Feedback removed",
+        description: "Your feedback has been cleared.",
+        duration: 2000,
+      });
+    }
+
+    // In a real implementation, you would send this to your backend:
+    // Example data structure for backend API:
+    const feedbackData = {
+      messageId: messageId,
+      feedback: newFeedback,
+      timestamp: new Date().toISOString(),
+      sessionId: "session_" + Date.now(), // You could track sessions
+    };
+    console.log("📊 Mock feedback data:", feedbackData);
+    // await fetch('/api/feedback', { method: 'POST', body: JSON.stringify(feedbackData) });
   };
 
   const quickQuestions = [
@@ -195,8 +241,36 @@ const Index: React.FC = () => {
                           )}
                         </p>
                       )}
-                      <div className="text-xs opacity-70 mt-1">
-                        {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      <div className="flex items-center justify-between mt-2">
+                        <div className="text-xs opacity-70">
+                          {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                        </div>
+                        {message.type === "bot" && !message.isStreaming && message.id !== "welcome" && (
+                          <div className="flex items-center space-x-1 sm:space-x-2">
+                            <button
+                              onClick={() => handleFeedback(message.id, "positive")}
+                              className={`p-1 sm:p-1.5 rounded-lg transition-all duration-200 hover:scale-110 ${
+                                messageFeedback[message.id] === "positive"
+                                  ? "bg-emerald-500/40 text-emerald-200"
+                                  : "bg-white/10 text-white/60 hover:bg-white/20 hover:text-white"
+                              }`}
+                              title="Helpful"
+                            >
+                              <ThumbsUp className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleFeedback(message.id, "negative")}
+                              className={`p-1 sm:p-1.5 rounded-lg transition-all duration-200 hover:scale-110 ${
+                                messageFeedback[message.id] === "negative"
+                                  ? "bg-red-500/40 text-red-200"
+                                  : "bg-white/10 text-white/60 hover:bg-white/20 hover:text-white"
+                              }`}
+                              title="Not helpful"
+                            >
+                              <ThumbsDown className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
